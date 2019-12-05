@@ -29,7 +29,8 @@ namespace kernel
 		void clear_bit(char* buffer, size_t index_of_bit) const;
 		bool read_bit(char* buffer, size_t index_of_bit) const;
 
-		static const size_t partition_cluster_size = 2048;
+		static const size_t FREE_CLUSTERS_INDEX_NO = 0;
+
 		std::vector<bool> free_clusters_;
 	};
 

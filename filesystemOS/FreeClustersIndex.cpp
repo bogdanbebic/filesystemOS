@@ -3,18 +3,26 @@
 // std::min
 #include <algorithm>
 
+#include "Partition.h"
+
 void kernel::FreeClustersIndex::read_from_partition(Partition* partition)
 {
-	char buffer[kernel::FreeClustersIndex::partition_cluster_size] = { 0 };
-	// partition->read(FREE_CLUSTERS_INDEX_NO, buffer);
+	if (partition == nullptr)
+		throw std::exception{};	// Should not happen, partition is never nullptr
+
+	char buffer[ClusterSize] = { 0 };
+	partition->readCluster(FREE_CLUSTERS_INDEX_NO, buffer);
 	this->read_free_clusters_from_buffer(buffer);
 }
 
 void kernel::FreeClustersIndex::write_to_partition(Partition* partition) const
 {
-	char buffer[kernel::FreeClustersIndex::partition_cluster_size] = { 0 };
+	if (partition == nullptr)
+		throw std::exception{};	// Should not happen, partition is never nullptr
+
+	char buffer[ClusterSize] = { 0 };
 	this->write_free_clusters_to_buffer(buffer);
-	// partition->write(FREE_CLUSTERS_INDEX_NO, buffer);
+	partition->writeCluster(FREE_CLUSTERS_INDEX_NO, buffer);
 }
 
 std::vector<bool>::reference kernel::FreeClustersIndex::operator[](size_t index)
@@ -39,15 +47,15 @@ std::vector<bool>::const_reference kernel::FreeClustersIndex::at(size_t index) c
 
 void kernel::FreeClustersIndex::read_free_clusters_from_buffer(char* buffer)
 {
-	if (this->free_clusters_.size() < partition_cluster_size * CHAR_BIT)
-		this->free_clusters_.resize(partition_cluster_size * CHAR_BIT);
-	for (size_t i = 0; i < partition_cluster_size * CHAR_BIT; i++)
+	if (this->free_clusters_.size() < ClusterSize * CHAR_BIT)
+		this->free_clusters_.resize(ClusterSize * CHAR_BIT);
+	for (size_t i = 0; i < ClusterSize * CHAR_BIT; i++)
 		this->free_clusters_[i] = this->read_bit(buffer, i);
 }
 
 void kernel::FreeClustersIndex::write_free_clusters_to_buffer(char* buffer) const
 {
-	for (size_t i = 0; i < std::min(partition_cluster_size * CHAR_BIT, this->free_clusters_.size()); i++)
+	for (size_t i = 0; i < std::min(ClusterSize * CHAR_BIT, static_cast<unsigned long>(this->free_clusters_.size())); i++)
 		if (this->free_clusters_[i])
 			this->set_bit(buffer, i);
 		else
