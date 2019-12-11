@@ -21,12 +21,18 @@
     <ClCompile Include="FreeClustersIndex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cluster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeClustersIndex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Partition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cluster.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
