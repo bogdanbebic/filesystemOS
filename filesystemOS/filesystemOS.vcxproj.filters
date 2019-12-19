@@ -29,11 +29,32 @@
     <ClInclude Include="FreeClustersIndex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Partition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Cluster.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="part.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeClustersRecord.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\disk1.dat">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\p1.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="particija.lib">
+      <Filter>Resource Files</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="uputstvo_za_rad_sa_particijom.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -14,12 +14,12 @@ void Cluster::set_cluster_number(cluster_number_t cluster_number)
 void Cluster::read_from_partition(Partition* partition)
 {
 	partition->readCluster(this->cluster_number_, this->buffer_);
-	this->is_dirty_ = false;
+	this->dirty_ = false;
 }
 
 void Cluster::write_to_partition(Partition* partition)
 {
-	if (this->is_dirty_)
+	if (this->dirty_)
 		partition->writeCluster(this->cluster_number_, this->buffer_);
-	this->is_dirty_ = false;
+	this->dirty_ = false;
 }

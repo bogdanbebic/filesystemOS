@@ -130,7 +130,18 @@
   <ItemGroup>
     <ClInclude Include="Cluster.h" />
     <ClInclude Include="FreeClustersIndex.h" />
-    <ClInclude Include="Partition.h" />
+    <ClInclude Include="FreeClustersRecord.h" />
+    <ClInclude Include="part.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\disk1.dat" />
+    <None Include="resources\p1.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="particija.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="uputstvo_za_rad_sa_particijom.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

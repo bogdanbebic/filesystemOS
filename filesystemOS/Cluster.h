@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Partition.h"
+#include "part.h"
 
 using cluster_number_t = ClusterNo;
 
@@ -12,9 +12,9 @@ public:
 	void read_from_partition(Partition* partition);
 	void write_to_partition(Partition* partition);
 protected:
-	// left for use for subclasses, serves only as a structure
+	// left for use by subclasses, serves only as a structure
 
-	bool is_dirty_ = false;
+	bool dirty_ = false;
 	char buffer_[ClusterSize] = {};
 private:
 	cluster_number_t cluster_number_;
