@@ -12,6 +12,7 @@ using file_cnt_t = FileCnt;
 class KernelFS
 {
 public:
+	enum FileOperations { WRITE = 'w', READ = 'r', APPEND = 'a' };
 	// TODO: delete ctor and dtor
 	KernelFS() { std::cout << "KernelFS ctor\n"; }
 	~KernelFS() { std::cout << "KernelFS dtor\n"; }
@@ -28,7 +29,7 @@ public:
 
 	File* open(char* filename, char mode);
 
-	char delete_file(char* fname);
+	char delete_file(char* filename);
 
 	static KernelFS* get_instance();
 protected:

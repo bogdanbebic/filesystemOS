@@ -28,11 +28,37 @@ char KernelFS::exists(char* filename)
 
 File* KernelFS::open(char* filename, char mode)
 {
+	if (mode == FileOperations::WRITE)
+	{
+		if (!this->exists(filename))
+		{
+			this->files_.insert(filename);
+			// TODO: disk operation
+		}
+		else
+		{
+			// TODO: delete contents of existing file from disk
+		}
+	}
+
+	if (!this->exists(filename))
+		return nullptr;
+
+	this->opened_files_to_modes_map_[filename] = mode;
+
+	// TODO: file opening
 	return nullptr;
 }
 
-char KernelFS::delete_file(char* fname)
+char KernelFS::delete_file(char* filename)
 {
+	// TODO: check open files
+	if (this->exists(filename))
+	{
+		this->files_.erase(filename);
+		// TODO: disk operation
+	}
+
 	return 0;
 }
 
