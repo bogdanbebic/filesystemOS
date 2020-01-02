@@ -127,12 +127,16 @@
   <ItemGroup>
     <ClCompile Include="Cluster.cpp" />
     <ClCompile Include="FreeClustersIndex.cpp" />
+    <ClCompile Include="FS.cpp" />
+    <ClCompile Include="KernelFS.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cluster.h" />
     <ClInclude Include="FreeClustersIndex.h" />
     <ClInclude Include="FreeClustersRecord.h" />
+    <ClInclude Include="FS.h" />
+    <ClInclude Include="KernelFS.h" />
     <ClInclude Include="part.h" />
   </ItemGroup>
   <ItemGroup>
