@@ -381,3 +381,7 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Do not ignore particija.lib, it is a part of the application
+# The source code is not available
+!*particija.lib

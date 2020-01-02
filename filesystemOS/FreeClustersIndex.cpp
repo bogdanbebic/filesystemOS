@@ -3,7 +3,7 @@
 // std::min
 #include <algorithm>
 
-#include "Partition.h"
+#include "part.h"
 
 void kernel::FreeClustersIndex::read_from_partition(Partition* partition)
 {
