@@ -4,7 +4,10 @@
 
 #include "FS.h"
 
-#define MY_TESTS
+#include "IndexCluster.h"
+#include "DirDataCluster.h"
+
+// #define MY_TESTS
 
 #ifdef MY_TESTS
 
@@ -93,14 +96,33 @@ public:
 
 int main()
 {
-	Partition partition{ (char*)"resources/p1.ini" };
+	Partition partition{ (char*)"resources/p2.ini" };
 	std::cout << "Hello, World!\n";
-	// Test{ {test_exists, test_open, test_delete, test_count_files, test_count_files_same_files, test_count_files_wrong_mode} };
-	Test{ []() {
-		char* file = (char*)"file.txt";
-		FS::open(file, 'w');
-		FS::open(file, 'r');
-		FS::open(file, 'a');
-	} };
+
+	IndexCluster index{ 0 };
+	index.read_from_partition(&partition);
+	std::cout << index.get_char_from_buffer(8)
+		<< index.get_char_from_buffer(9)
+		<< index.get_char_from_buffer(10)
+		<< index.get_char_from_buffer(11)
+		<< index.get_char_from_buffer(12);
+
+	std::cout << std::endl;
+
+	std::cout << index.get_cluster(1) << std::endl;
+	std::cout << sizeof(dir_entry_t) << std::endl;
+
+	DirDataCluster dir_data{ 0 };
+	dir_data.read_from_partition(&partition);
+
+	dir_data.set_dir_entry(0, { "imefajl", "ex" });
+	dir_data.set_dir_entry(1, { "fajl1", {'e', 'x', 't' } });
+	dir_data.set_dir_entry(3, { "fajl3", {'e', 'x', '3' } });
+	dir_data.write_to_partition(&partition);
+
+	DirDataCluster dir_data0{ 0 };
+	dir_data0.read_from_partition(&partition);
+	dir_entry_t entry = dir_data0.get_dir_entry(1);
+
 	return 0;
 }

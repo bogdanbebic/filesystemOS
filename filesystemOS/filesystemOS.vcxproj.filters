@@ -30,6 +30,12 @@
     <ClCompile Include="FS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IndexCluster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DirDataCluster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeClustersIndex.h">
@@ -50,12 +56,27 @@
     <ClInclude Include="KernelFS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IndexCluster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirEntry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirDataCluster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\disk1.dat">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="resources\p1.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\disk2.dat">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\p2.ini">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
