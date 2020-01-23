@@ -13,5 +13,6 @@ public:
 
 private:
 	dir_entry_t* dir_entries_ = (dir_entry_t*)this->buffer_;
+	static const size_t dir_entries_count = ClusterSize / sizeof(dir_entry_t);
 };
 

@@ -15,6 +15,6 @@ public:
 	void format();
 private:
 	uint32_t* clusters_ = (uint32_t*)this->buffer_;
-
+	static const size_t clusters_count = ClusterSize / sizeof(uint32_t);
 };
 
