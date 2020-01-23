@@ -3,7 +3,7 @@
 
 char KernelFS::mount(Partition* partition)
 {
-	if (partition == nullptr) return -1;
+	if (partition == nullptr) return 0;
 	
 	this->partition_ = partition;
 	
@@ -22,6 +22,8 @@ char KernelFS::mount(Partition* partition)
 
 char KernelFS::unmount()
 {
+	if (this->partition_ == nullptr) return 0;
+	
 	this->root_dir_index_->write_to_partition(this->partition_);
 	delete this->root_dir_index_;
 	this->root_dir_index_ = nullptr;
@@ -39,6 +41,8 @@ char KernelFS::unmount()
 
 char KernelFS::format()
 {
+	if (this->partition_ == nullptr) return 0;
+	
 	this->free_clusters_record_->format();
 	this->root_dir_index_->format();
 	this->clear_cache();
