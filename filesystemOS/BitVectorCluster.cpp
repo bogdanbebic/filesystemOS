@@ -37,3 +37,10 @@ bool BitVectorCluster::get_bit(size_t index) const
 	size_t index_of_bit_in_byte = index % CHAR_BIT;
 	return (this->buffer_[index_of_byte] & 1 << index_of_bit_in_byte) != 0;
 }
+
+void BitVectorCluster::format()
+{
+	this->dirty_ = true;
+	for (size_t i = 0; i < ClusterSize; i++)
+		this->buffer_[i] = (char)-1;
+}

@@ -36,7 +36,7 @@ public:
 
 	static KernelFS* get_instance();
 protected:
-	static KernelFS kernelFS_instance;
+	static KernelFS kernel_fs_instance_;
 private:
 	Partition* partition_ = nullptr;
 

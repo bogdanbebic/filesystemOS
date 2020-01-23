@@ -1,3 +1,4 @@
+// ReSharper disable CppInconsistentNaming
 #include "FS.h"
 
 #include "KernelFS.h"
@@ -35,6 +36,7 @@ char FS::doesExist(char* fname)
 	return myImpl->exists(fname);
 }
 
+// ReSharper disable once CppParameterMayBeConst
 File* FS::open(char* fname, char mode)
 {
 	return myImpl->open(fname, mode);

@@ -16,3 +16,10 @@ uint32_t IndexCluster::get_cluster(size_t index) const
 {
 	return this->clusters_[index];
 }
+
+void IndexCluster::format()
+{
+	this->dirty_ = true;
+	for (size_t i = 0; i < ClusterSize; i++)
+		this->buffer_[i] = 0;
+}

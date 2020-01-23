@@ -6,7 +6,7 @@ char KernelFS::mount(Partition* partition)
 	
 	this->partition_ = partition;
 	
-	this->bit_vector_clusters_cnt_ = this->partition_->getNumOfClusters() / (ClusterSize * CHAR_BIT);
+	this->bit_vector_clusters_cnt_ = 1 + this->partition_->getNumOfClusters() / (ClusterSize * CHAR_BIT);
 
 	this->free_clusters_record_ = new FreeClustersRecord(this->bit_vector_clusters_cnt_);
 	this->free_clusters_record_->read_from_partition(this->partition_);
@@ -18,9 +18,11 @@ char KernelFS::mount(Partition* partition)
 
 char KernelFS::unmount()
 {
+	this->root_dir_index_->write_to_partition(this->partition_);
 	delete this->root_dir_index_;
 	this->root_dir_index_ = nullptr;
 
+	this->free_clusters_record_->write_to_partition(this->partition_);
 	delete this->free_clusters_record_;
 	this->free_clusters_record_ = nullptr;
 
@@ -30,12 +32,14 @@ char KernelFS::unmount()
 
 char KernelFS::format()
 {
+	this->free_clusters_record_->format();
+	this->root_dir_index_->format();
 	return 0;
 }
 
 file_cnt_t KernelFS::number_of_files()
 {
-	// TODO: check failiure
+	// TODO: check failure
 	return this->files_.size();
 }
 
@@ -82,11 +86,11 @@ char KernelFS::delete_file(char* filename)
 
 KernelFS* KernelFS::get_instance()
 {
-	return &kernelFS_instance;
+	return &kernel_fs_instance_;
 }
 
 /**
  *	Only instance which is required by the FS interface
  *	(the Singleton design pattern was not implemented)
  */
-KernelFS KernelFS::kernelFS_instance;
+KernelFS KernelFS::kernel_fs_instance_;
