@@ -25,7 +25,7 @@ public:
 	
 	char unmount();
 
-	char format() const;
+	char format();
 
 	file_cnt_t number_of_files() const;
 
@@ -40,6 +40,7 @@ protected:
 	static KernelFS kernel_fs_instance_;
 private:
 	void cache_files_to_container();
+	void clear_cache();
 	
 	Partition* partition_ = nullptr;
 

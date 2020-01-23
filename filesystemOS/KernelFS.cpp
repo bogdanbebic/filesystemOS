@@ -15,7 +15,7 @@ char KernelFS::mount(Partition* partition)
 	this->root_dir_index_ = new IndexCluster(this->bit_vector_clusters_cnt_);
 	this->root_dir_index_->read_from_partition(this->partition_);
 
-	
+	this->cache_files_to_container();
 
 	return 1;
 }
@@ -31,13 +31,17 @@ char KernelFS::unmount()
 	this->free_clusters_record_ = nullptr;
 
 	this->partition_ = nullptr;
+
+	this->clear_cache();
+	
 	return 1;
 }
 
-char KernelFS::format() const
+char KernelFS::format()
 {
 	this->free_clusters_record_->format();
 	this->root_dir_index_->format();
+	this->clear_cache();
 	return 1;
 }
 
@@ -122,6 +126,11 @@ void KernelFS::cache_files_to_container()
 			}
 		}
 	}
+}
+
+void KernelFS::clear_cache()
+{
+	this->files_.clear();
 }
 
 /**
