@@ -1,5 +1,7 @@
 #include "Cluster.h"
 
+std::list<Cluster*> Cluster::cached_clusters_{};
+
 Cluster::Cluster(cluster_number_t cluster_number)
 	: cluster_number_{cluster_number}
 {
