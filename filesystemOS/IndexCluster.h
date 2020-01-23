@@ -13,8 +13,9 @@ public:
 	uint32_t get_cluster(size_t index) const;
 
 	void format();
+
+	static const size_t clusters_count = ClusterSize / sizeof(uint32_t);
 private:
 	uint32_t* clusters_ = (uint32_t*)this->buffer_;
-	static const size_t clusters_count = ClusterSize / sizeof(uint32_t);
 };
 

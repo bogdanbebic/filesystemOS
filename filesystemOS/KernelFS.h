@@ -8,6 +8,7 @@
 #include <iostream>
 #include "IndexCluster.h"
 #include "FreeClustersRecord.h"
+#include "DirEntry.h"
 
 using file_cnt_t = FileCnt;
 using cluster_cnt_t = ClusterNo;
@@ -24,9 +25,9 @@ public:
 	
 	char unmount();
 
-	char format();
+	char format() const;
 
-	file_cnt_t number_of_files();
+	file_cnt_t number_of_files() const;
 
 	char exists(char* filename);
 
@@ -38,6 +39,8 @@ public:
 protected:
 	static KernelFS kernel_fs_instance_;
 private:
+	void cache_files_to_container();
+	
 	Partition* partition_ = nullptr;
 
 	cluster_cnt_t bit_vector_clusters_cnt_ = 0;
@@ -45,8 +48,8 @@ private:
 
 	IndexCluster* root_dir_index_ = nullptr;
 
-	std::unordered_set<char*> files_;
-	std::map<char*, char> opened_files_to_modes_map_;
+	std::unordered_set<const char *> files_;
+	std::map<const char *, char> opened_files_to_modes_map_;
 };
 
 // extern KernelFS kernelFS_instance;

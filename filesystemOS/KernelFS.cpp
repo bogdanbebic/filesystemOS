@@ -1,4 +1,5 @@
 #include "KernelFS.h"
+#include "DirDataCluster.h"
 
 char KernelFS::mount(Partition* partition)
 {
@@ -13,6 +14,9 @@ char KernelFS::mount(Partition* partition)
 
 	this->root_dir_index_ = new IndexCluster(this->bit_vector_clusters_cnt_);
 	this->root_dir_index_->read_from_partition(this->partition_);
+
+	
+
 	return 0;
 }
 
@@ -30,14 +34,14 @@ char KernelFS::unmount()
 	return 0;
 }
 
-char KernelFS::format()
+char KernelFS::format() const
 {
 	this->free_clusters_record_->format();
 	this->root_dir_index_->format();
 	return 0;
 }
 
-file_cnt_t KernelFS::number_of_files()
+file_cnt_t KernelFS::number_of_files() const
 {
 	// TODO: check failure
 	return this->files_.size();
@@ -87,6 +91,37 @@ char KernelFS::delete_file(char* filename)
 KernelFS* KernelFS::get_instance()
 {
 	return &kernel_fs_instance_;
+}
+
+void KernelFS::cache_files_to_container()
+{
+	for (size_t i = 0; i < IndexCluster::clusters_count; i++)
+	{
+		if (this->root_dir_index_->get_cluster(i) != 0)
+		{
+			IndexCluster index2_cluster{ this->root_dir_index_->get_cluster(i) };
+			index2_cluster.read_from_partition(this->partition_);
+			for (size_t j = 0; j < IndexCluster::clusters_count; j++)
+			{
+				if (index2_cluster.get_cluster(j) != 0)
+				{
+					DirDataCluster dir_data_cluster{ index2_cluster.get_cluster(j) };
+					dir_data_cluster.read_from_partition(partition_);
+					for (size_t k = 0; k < DirDataCluster::dir_entries_count; k++)
+					{
+						dir_entry_t dir_entry = dir_data_cluster.get_dir_entry(k);
+						if (dir_entry.name[0] != 0)
+						{
+							std::string name{ dir_entry.name };
+							std::string ext{ dir_entry.extension };
+							std::string filepath = name + "." + ext;
+							this->files_.insert(filepath.c_str());
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 /**
