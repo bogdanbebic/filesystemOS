@@ -1,7 +1,7 @@
 #include "BitVectorCluster.h"
 
 // CHAR_BIT
-#include <stdlib.h>
+#include <climits>
 
 BitVectorCluster::BitVectorCluster(cluster_number_t cluster_number)
 	: Cluster(cluster_number)
