@@ -49,14 +49,17 @@ char KernelFS::format()
 	return 1;
 }
 
-file_cnt_t KernelFS::number_of_files() const
+file_cnt_t KernelFS::get_number_of_files() const
 {
-	// TODO: check failure
+	if (this->partition_ == nullptr) return -1;
+	
 	return this->files_.size();
 }
 
 char KernelFS::exists(char* filename)
 {
+	if (this->partition_ == nullptr) return 0;
+	
 	return this->files_.find(filename) != this->files_.end() ? 1 : 0;
 }
 

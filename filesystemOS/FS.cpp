@@ -28,7 +28,7 @@ char FS::format()
 
 FileCnt FS::readRootDir()
 {
-	return myImpl->number_of_files();
+	return myImpl->get_number_of_files();
 }
 
 char FS::doesExist(char* fname)

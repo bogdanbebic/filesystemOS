@@ -27,7 +27,7 @@ public:
 
 	char format();
 
-	file_cnt_t number_of_files() const;
+	file_cnt_t get_number_of_files() const;
 
 	char exists(char* filename);
 
