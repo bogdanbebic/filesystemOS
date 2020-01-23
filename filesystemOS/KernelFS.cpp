@@ -17,7 +17,7 @@ char KernelFS::mount(Partition* partition)
 
 	
 
-	return 0;
+	return 1;
 }
 
 char KernelFS::unmount()
@@ -31,14 +31,14 @@ char KernelFS::unmount()
 	this->free_clusters_record_ = nullptr;
 
 	this->partition_ = nullptr;
-	return 0;
+	return 1;
 }
 
 char KernelFS::format() const
 {
 	this->free_clusters_record_->format();
 	this->root_dir_index_->format();
-	return 0;
+	return 1;
 }
 
 file_cnt_t KernelFS::number_of_files() const
