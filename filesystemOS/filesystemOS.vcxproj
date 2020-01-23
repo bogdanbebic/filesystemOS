@@ -125,19 +125,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BitVectorCluster.cpp" />
     <ClCompile Include="Cluster.cpp" />
     <ClCompile Include="DirDataCluster.cpp" />
-    <ClCompile Include="FreeClustersIndex.cpp" />
+    <ClCompile Include="FreeClustersRecord.cpp" />
     <ClCompile Include="FS.cpp" />
     <ClCompile Include="IndexCluster.cpp" />
     <ClCompile Include="KernelFS.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BitVectorCluster.h" />
     <ClInclude Include="Cluster.h" />
     <ClInclude Include="DirDataCluster.h" />
     <ClInclude Include="DirEntry.h" />
-    <ClInclude Include="FreeClustersIndex.h" />
     <ClInclude Include="FreeClustersRecord.h" />
     <ClInclude Include="FS.h" />
     <ClInclude Include="IndexCluster.h" />

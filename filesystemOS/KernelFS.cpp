@@ -2,11 +2,29 @@
 
 char KernelFS::mount(Partition* partition)
 {
+	if (partition == nullptr) return -1;
+	
+	this->partition_ = partition;
+	
+	this->bit_vector_clusters_cnt_ = this->partition_->getNumOfClusters() / (ClusterSize * CHAR_BIT);
+
+	this->free_clusters_record_ = new FreeClustersRecord(this->bit_vector_clusters_cnt_);
+	this->free_clusters_record_->read_from_partition(this->partition_);
+
+	this->root_dir_index_ = new IndexCluster(this->bit_vector_clusters_cnt_);
+	this->root_dir_index_->read_from_partition(this->partition_);
 	return 0;
 }
 
 char KernelFS::unmount()
 {
+	delete this->root_dir_index_;
+	this->root_dir_index_ = nullptr;
+
+	delete this->free_clusters_record_;
+	this->free_clusters_record_ = nullptr;
+
+	this->partition_ = nullptr;
 	return 0;
 }
 

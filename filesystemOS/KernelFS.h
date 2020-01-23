@@ -6,8 +6,11 @@
 #include <unordered_set>
 #include <map>
 #include <iostream>
+#include "IndexCluster.h"
+#include "FreeClustersRecord.h"
 
 using file_cnt_t = FileCnt;
+using cluster_cnt_t = ClusterNo;
 
 class KernelFS
 {
@@ -35,6 +38,13 @@ public:
 protected:
 	static KernelFS kernelFS_instance;
 private:
+	Partition* partition_ = nullptr;
+
+	cluster_cnt_t bit_vector_clusters_cnt_ = 0;
+	FreeClustersRecord* free_clusters_record_ = nullptr;
+
+	IndexCluster* root_dir_index_ = nullptr;
+
 	std::unordered_set<char*> files_;
 	std::map<char*, char> opened_files_to_modes_map_;
 };

@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FreeClustersIndex.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Cluster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,18 +33,18 @@
     <ClCompile Include="DirDataCluster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BitVectorCluster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeClustersRecord.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FreeClustersIndex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Cluster.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="part.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FreeClustersRecord.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FS.h">
@@ -63,6 +60,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DirDataCluster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BitVectorCluster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeClustersRecord.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
