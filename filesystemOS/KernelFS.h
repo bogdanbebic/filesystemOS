@@ -49,8 +49,8 @@ private:
 
 	IndexCluster* root_dir_index_ = nullptr;
 
-	std::unordered_set<const char *> files_;
-	std::map<const char *, char> opened_files_to_modes_map_;
+	std::unordered_set<std::string> files_;
+	std::map<std::string, char> opened_files_to_modes_map_;
 };
 
 // extern KernelFS kernelFS_instance;

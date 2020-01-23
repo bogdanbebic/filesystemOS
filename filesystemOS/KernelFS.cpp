@@ -69,7 +69,7 @@ File* KernelFS::open(char* filename, char mode)
 	{
 		if (!this->exists(filename))
 		{
-			this->files_.insert(filename);
+			this->files_.emplace(filename);
 			// TODO: disk operation
 		}
 		else
@@ -123,10 +123,7 @@ void KernelFS::cache_files_to_container()
 						dir_entry_t dir_entry = dir_data_cluster.get_dir_entry(k);
 						if (dir_entry.name[0] != 0)
 						{
-							std::string name{ dir_entry.name };
-							std::string ext{ dir_entry.extension };
-							std::string filepath = name + "." + ext;
-							this->files_.insert(filepath.c_str());
+							this->files_.emplace(dir_entry.name);
 						}
 					}
 				}

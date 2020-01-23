@@ -82,6 +82,12 @@
     <None Include="resources\p2.ini">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="resources\formatiran.dat">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\napunjen_fajlovima.dat">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Library Include="particija.lib">

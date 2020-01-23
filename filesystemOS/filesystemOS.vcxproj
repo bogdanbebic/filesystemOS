@@ -148,6 +148,8 @@
   <ItemGroup>
     <None Include="resources\disk1.dat" />
     <None Include="resources\disk2.dat" />
+    <None Include="resources\formatiran.dat" />
+    <None Include="resources\napunjen_fajlovima.dat" />
     <None Include="resources\p1.ini" />
     <None Include="resources\p2.ini" />
   </ItemGroup>
