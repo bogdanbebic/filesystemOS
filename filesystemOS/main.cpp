@@ -19,7 +19,9 @@ int main()
 	FS::deleteFile((char*)"/fajl2.txt");
 	std::cout << "Deleted /fajl2.txt\n";
 	std::cout << "Does exist: " << (bool)FS::doesExist((char*)"/fajl2.txt") << std::endl;
-	
+	FS::open((char*)"/file1.txt", 'w');
+	FS::open((char*)"/file2.txt", 'w');
+	FS::open((char*)"/file3.txt", 'w');
 	FS::unmount();
 	return 0;
 }
