@@ -59,8 +59,8 @@ file_cnt_t KernelFS::get_number_of_files() const
 char KernelFS::exists(char* filename)
 {
 	if (this->partition_ == nullptr) return 0;
-	
-	return this->files_.find(filename) != this->files_.end() ? 1 : 0;
+
+	return this->files_.find(std::string{ KernelFS::to_dir_entry(filename).name }) != this->files_.end() ? 1 : 0;
 }
 
 File* KernelFS::open(char* filename, char mode)
@@ -92,8 +92,33 @@ char KernelFS::delete_file(char* filename)
 	// TODO: check open files
 	if (this->exists(filename))
 	{
-		this->files_.erase(filename);
-		// TODO: disk operation
+		this->files_.erase(std::string{ KernelFS::to_dir_entry(filename).name });
+		dir_entry_t dir_entry = KernelFS::to_dir_entry(filename);
+		for (size_t i = 0; i < IndexCluster::clusters_count; i++)
+		{
+			if  (this->root_dir_index_->get_cluster(i) != 0)
+			{
+				IndexCluster index2{ this->root_dir_index_->get_cluster(i) };
+				index2.read_from_partition(this->partition_);
+				for (size_t j = 0; j < IndexCluster::clusters_count; j++)
+				{
+					if (index2.get_cluster(j) != 0)
+					{
+						DirDataCluster dir_data_cluster{ index2.get_cluster(j) };
+						dir_data_cluster.read_from_partition(this->partition_);
+						for (size_t k = 0; k < DirDataCluster::dir_entries_count; k++)
+						{
+							if (KernelFS::is_same_descriptor(dir_entry, dir_data_cluster.get_dir_entry(k)))
+							{
+								dir_data_cluster.set_dir_entry(k, dir_entry_t{});
+								dir_data_cluster.write_to_partition(this->partition_);
+								return 1;
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	return 0;
@@ -135,6 +160,11 @@ void KernelFS::cache_files_to_container()
 void KernelFS::clear_cache()
 {
 	this->files_.clear();
+}
+
+bool KernelFS::is_same_descriptor(dir_entry_t dir_entry1, dir_entry_t dir_entry2)
+{
+	return std::string{ dir_entry1.name } == std::string{ dir_entry2.name };
 }
 
 /**

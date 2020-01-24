@@ -43,6 +43,7 @@ private:
 	void cache_files_to_container();
 	void clear_cache();
 
+	static bool is_same_descriptor(dir_entry_t dir_entry1, dir_entry_t dir_entry2);
 	
 	Partition* partition_ = nullptr;
 
