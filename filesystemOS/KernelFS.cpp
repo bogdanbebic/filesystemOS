@@ -65,23 +65,20 @@ char KernelFS::exists(char* filename)
 
 File* KernelFS::open(char* filename, char mode)
 {
+	// TODO: synchronization
 	if (mode == FileOperations::WRITE)
 	{
-		if (!this->exists(filename))
-		{
-			this->files_.emplace(KernelFS::to_dir_entry(filename).name);
-			this->create_file_on_partition(KernelFS::to_dir_entry(filename));
-		}
-		else
-		{
-			// TODO: delete contents of existing file from disk
-		}
+		if (this->exists(filename))
+			this->delete_file(filename);
+		
+		this->files_.emplace(KernelFS::to_dir_entry(filename).name);
+		this->create_file_on_partition(KernelFS::to_dir_entry(filename));
 	}
 
 	if (!this->exists(filename))
 		return nullptr;
 
-	this->opened_files_to_modes_map_[filename] = mode;
+	this->opened_files_to_modes_map_[std::string{ KernelFS::to_dir_entry(filename).name }] = mode;
 
 	// TODO: file opening
 	return nullptr;
