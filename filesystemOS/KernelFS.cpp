@@ -138,6 +138,31 @@ void KernelFS::clear_cache()
 }
 
 /**
+ * \brief Creates an empty dir_entry_t based on the filepath
+ * \param filepath starts with /, has max 8 chars for name followed by . and max 3 chars for ext ("/example.ext")
+ * \return the dir_entry_t corresponding to the empty file with the given name
+ */
+dir_entry_t KernelFS::to_dir_entry(char* filepath)
+{
+	dir_entry_t dir_entry;
+
+	for (char& i : dir_entry.name)
+		i = ' ';
+
+	for (char& i : dir_entry.extension)
+		i = ' ';
+		
+	size_t i = 0;
+	for (; i < FNAMELEN && filepath[i + 1] != '.'; i++)
+		dir_entry.name[i] = filepath[i + 1];
+
+	for (size_t j = i; j < i + FEXTLEN && filepath[j + 2] != '\0'; j++)
+		dir_entry.extension[j - i] = filepath[j + 2];
+	
+	return dir_entry;
+}
+
+/**
  *	Only instance which is required by the FS interface
  *	(the Singleton design pattern was not implemented)
  */

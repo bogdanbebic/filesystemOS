@@ -16,3 +16,12 @@ dir_entry_t DirDataCluster::get_dir_entry(size_t index) const
 {
 	return this->dir_entries_[index];
 }
+
+size_t DirDataCluster::get_free_entry() const
+{
+	for (size_t i = 0; i < DirDataCluster::dir_entries_count; i++)
+		if (this->get_dir_entry(i).name[0] == 0)
+			return i;
+
+	return DirDataCluster::dir_entries_count;
+}

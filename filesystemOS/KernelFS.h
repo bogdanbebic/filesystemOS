@@ -36,11 +36,13 @@ public:
 	char delete_file(char* filename);
 
 	static KernelFS* get_instance();
+	static dir_entry_t to_dir_entry(char* filepath);
 protected:
 	static KernelFS kernel_fs_instance_;
 private:
 	void cache_files_to_container();
 	void clear_cache();
+
 	
 	Partition* partition_ = nullptr;
 
