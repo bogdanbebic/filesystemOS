@@ -22,6 +22,9 @@ int main()
 	FS::open((char*)"/file1.txt", 'w');
 	FS::open((char*)"/file2.txt", 'w');
 	FS::open((char*)"/file3.txt", 'w');
+
+	std::cout << "Does exist: " << (bool)FS::doesExist((char*)"/file3.txt") << std::endl;
+	
 	FS::unmount();
 	return 0;
 }

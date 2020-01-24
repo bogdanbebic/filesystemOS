@@ -69,7 +69,7 @@ File* KernelFS::open(char* filename, char mode)
 	{
 		if (!this->exists(filename))
 		{
-			this->files_.emplace(filename);
+			this->files_.emplace(KernelFS::to_dir_entry(filename).name);
 			this->create_file_on_partition(KernelFS::to_dir_entry(filename));
 		}
 		else
