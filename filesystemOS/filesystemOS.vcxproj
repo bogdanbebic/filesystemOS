@@ -127,6 +127,7 @@
   <ItemGroup>
     <ClCompile Include="BitVectorCluster.cpp" />
     <ClCompile Include="Cluster.cpp" />
+    <ClCompile Include="ClusterAllocator.cpp" />
     <ClCompile Include="DirDataCluster.cpp" />
     <ClCompile Include="FreeClustersRecord.cpp" />
     <ClCompile Include="FS.cpp" />
@@ -137,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="BitVectorCluster.h" />
     <ClInclude Include="Cluster.h" />
+    <ClInclude Include="ClusterAllocator.h" />
     <ClInclude Include="DirDataCluster.h" />
     <ClInclude Include="DirEntry.h" />
     <ClInclude Include="FreeClustersRecord.h" />

@@ -9,6 +9,7 @@
 #include "IndexCluster.h"
 #include "FreeClustersRecord.h"
 #include "DirEntry.h"
+#include "ClusterAllocator.h"
 
 using file_cnt_t = FileCnt;
 using cluster_cnt_t = ClusterNo;
@@ -53,6 +54,8 @@ private:
 	FreeClustersRecord* free_clusters_record_ = nullptr;
 
 	IndexCluster* root_dir_index_ = nullptr;
+
+	ClusterAllocator* cluster_allocator_ = nullptr;
 
 	std::unordered_set<std::string> files_;
 	std::map<std::string, char> opened_files_to_modes_map_;

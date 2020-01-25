@@ -15,6 +15,8 @@ char KernelFS::mount(Partition* partition)
 	this->root_dir_index_ = new IndexCluster(this->bit_vector_clusters_cnt_);
 	this->root_dir_index_->read_from_partition(this->partition_);
 
+	this->cluster_allocator_ = new ClusterAllocator{ this->partition_ };
+	
 	this->cache_files_to_container();
 
 	return 1;
@@ -23,6 +25,9 @@ char KernelFS::mount(Partition* partition)
 char KernelFS::unmount()
 {
 	if (this->partition_ == nullptr) return 0;
+
+	delete this->cluster_allocator_;
+	this->cluster_allocator_ = nullptr;
 	
 	this->root_dir_index_->write_to_partition(this->partition_);
 	delete this->root_dir_index_;
@@ -101,14 +106,12 @@ char KernelFS::delete_file(char* filename)
 				{
 					if (index2.get_cluster(j) != 0)
 					{
-						DirDataCluster dir_data_cluster{ index2.get_cluster(j) };
-						dir_data_cluster.read_from_partition(this->partition_);
+						DirDataCluster* dir_data_cluster = this->cluster_allocator_->get_dir_data_cluster(index2.get_cluster(j));
 						for (size_t k = 0; k < DirDataCluster::dir_entries_count; k++)
 						{
-							if (KernelFS::is_same_descriptor(dir_entry, dir_data_cluster.get_dir_entry(k)))
+							if (KernelFS::is_same_descriptor(dir_entry, dir_data_cluster->get_dir_entry(k)))
 							{
-								dir_data_cluster.set_dir_entry(k, dir_entry_t{});
-								dir_data_cluster.write_to_partition(this->partition_);
+								dir_data_cluster->set_dir_entry(k, dir_entry_t{});
 								return 1;
 							}
 						}
@@ -138,11 +141,10 @@ void KernelFS::cache_files_to_container()
 			{
 				if (index2_cluster.get_cluster(j) != 0)
 				{
-					DirDataCluster dir_data_cluster{ index2_cluster.get_cluster(j) };
-					dir_data_cluster.read_from_partition(partition_);
+					DirDataCluster* dir_data_cluster = this->cluster_allocator_->get_dir_data_cluster(index2_cluster.get_cluster(j));
 					for (size_t k = 0; k < DirDataCluster::dir_entries_count; k++)
 					{
-						dir_entry_t dir_entry = dir_data_cluster.get_dir_entry(k);
+						dir_entry_t dir_entry = dir_data_cluster->get_dir_entry(k);
 						if (dir_entry.name[0] != 0)
 						{
 							this->files_.emplace(dir_entry.name);
@@ -185,15 +187,13 @@ void KernelFS::create_file_on_partition(dir_entry_t dir_entry) const
 				index2.write_to_partition(this->partition_);
 			}
 
-			DirDataCluster dir_data_cluster{ index2.get_cluster(j) };
-			dir_data_cluster.read_from_partition(this->partition_);
-			size_t free_entry = dir_data_cluster.get_free_entry();
+			DirDataCluster* dir_data_cluster = this->cluster_allocator_->get_dir_data_cluster(index2.get_cluster(j));
+			size_t free_entry = dir_data_cluster->get_free_entry();
 			if (free_entry < DirDataCluster::dir_entries_count)
 			{
 				dir_entry.cluster_number = index2.get_cluster(j);
 				dir_entry.offset_in_cluster = free_entry;
-				dir_data_cluster.set_dir_entry(free_entry, dir_entry);
-				dir_data_cluster.write_to_partition(this->partition_);
+				dir_data_cluster->set_dir_entry(free_entry, dir_entry);
 				return;
 			}
 		}

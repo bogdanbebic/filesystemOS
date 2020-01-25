@@ -23,10 +23,4 @@ protected:
 	char buffer_[ClusterSize] = {};
 private:
 	cluster_number_t cluster_number_;
-
-	static void add_to_cache(Cluster* cluster);
-	static void remove_from_cache(Cluster* cluster);
-	static Cluster * get_victim_cluster();
-	static std::list<Cluster*> cached_clusters_;
-	static constexpr size_t cache_size = 100;
 };
