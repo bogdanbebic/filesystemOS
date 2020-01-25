@@ -1,5 +1,6 @@
 #include "KernelFS.h"
 #include "DirDataCluster.h"
+#include "File.h"
 
 char KernelFS::mount(Partition* partition)
 {
@@ -85,8 +86,9 @@ File* KernelFS::open(char* filename, char mode)
 
 	this->opened_files_to_modes_map_[std::string{ KernelFS::to_dir_entry(filename).name }] = mode;
 
+	File* file = new File{};
 	// TODO: file opening
-	return nullptr;
+	return file;
 }
 
 char KernelFS::delete_file(char* filename)
