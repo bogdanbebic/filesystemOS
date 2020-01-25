@@ -37,7 +37,8 @@ public:
 	char delete_file(char* filename);
 
 	ClusterAllocator* get_cluster_allocator() const;
-	
+	FreeClustersRecord* get_free_clusters_record() const;
+
 	static KernelFS* get_instance();
 	static dir_entry_t to_dir_entry(char* filepath);
 protected:
@@ -58,6 +59,7 @@ private:
 	FreeClustersRecord* free_clusters_record_ = nullptr;
 
 	IndexCluster* root_dir_index_ = nullptr;
+
 
 	ClusterAllocator* cluster_allocator_ = nullptr;
 

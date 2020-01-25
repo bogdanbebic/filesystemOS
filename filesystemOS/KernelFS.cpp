@@ -122,6 +122,7 @@ File* KernelFS::open(char* filename, char mode)
 	file->myImpl->set_dir_entry(dir_entry);
 	file->myImpl->set_mode(static_cast<FileOperations>(mode));
 	file->myImpl->set_partition(this->partition_);
+	file->myImpl->cache_index_clusters();
 	return file;
 }
 
@@ -255,6 +256,11 @@ void KernelFS::create_file_on_partition(dir_entry_t dir_entry) const
 bool KernelFS::is_same_descriptor(dir_entry_t dir_entry1, dir_entry_t dir_entry2)
 {
 	return std::string{ dir_entry1.name } == std::string{ dir_entry2.name };
+}
+
+FreeClustersRecord* KernelFS::get_free_clusters_record() const
+{
+	return this->free_clusters_record_;
 }
 
 /**
