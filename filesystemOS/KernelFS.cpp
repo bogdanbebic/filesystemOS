@@ -190,6 +190,8 @@ void KernelFS::create_file_on_partition(dir_entry_t dir_entry) const
 			size_t free_entry = dir_data_cluster.get_free_entry();
 			if (free_entry < DirDataCluster::dir_entries_count)
 			{
+				dir_entry.cluster_number = index2.get_cluster(j);
+				dir_entry.offset_in_cluster = free_entry;
 				dir_data_cluster.set_dir_entry(free_entry, dir_entry);
 				dir_data_cluster.write_to_partition(this->partition_);
 				return;
