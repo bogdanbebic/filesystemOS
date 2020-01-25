@@ -32,7 +32,7 @@ char KernelFile::write(bytes_cnt_t bytes_cnt, char* buffer)
 		return 0;
 	
 	if (this->size_ <= this->current_position_ + bytes_cnt)
-		this->extend(this->current_position_ + bytes_cnt - this->size_ + 1);
+		this->extend(this->current_position_ + bytes_cnt - this->size_);
 	
 	bytes_cnt_t i = 0;
 	while (i < bytes_cnt && !this->eof())
@@ -59,7 +59,7 @@ bytes_cnt_t KernelFile::read(bytes_cnt_t bytes_cnt, char* buffer)
 		i++;
 		this->current_position_++;
 	}
-		
+	
 	return i;
 }
 
@@ -83,7 +83,7 @@ bytes_cnt_t KernelFile::get_current_position() const
  */
 char KernelFile::eof() const
 {
-	return this->current_position_ == this->size_ - 1 ? 2 : 0;
+	return this->current_position_ == this->size_ ? 2 : 0;
 }
 
 bytes_cnt_t KernelFile::get_file_size() const
