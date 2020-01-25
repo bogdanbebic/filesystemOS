@@ -36,6 +36,8 @@ public:
 
 	char delete_file(char* filename);
 
+	ClusterAllocator* get_cluster_allocator() const;
+	
 	static KernelFS* get_instance();
 	static dir_entry_t to_dir_entry(char* filepath);
 protected:
@@ -44,6 +46,8 @@ private:
 	void cache_files_to_container();
 	void clear_cache();
 
+	dir_entry_t get_dir_entry(std::string filename);
+	
 	void create_file_on_partition(dir_entry_t dir_entry) const;
 
 	static bool is_same_descriptor(dir_entry_t dir_entry1, dir_entry_t dir_entry2);

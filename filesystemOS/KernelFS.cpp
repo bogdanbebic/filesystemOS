@@ -1,6 +1,7 @@
 #include "KernelFS.h"
 #include "DirDataCluster.h"
 #include "File.h"
+#include "KernelFile.h"
 
 char KernelFS::mount(Partition* partition)
 {
@@ -69,6 +70,35 @@ char KernelFS::exists(char* filename)
 	return this->files_.find(std::string{ KernelFS::to_dir_entry(filename).name }) != this->files_.end() ? 1 : 0;
 }
 
+dir_entry_t KernelFS::get_dir_entry(std::string filename)
+{
+	for (size_t i = 0; i < IndexCluster::clusters_count; i++)
+	{
+		if (this->root_dir_index_->get_cluster(i) != 0)
+		{
+			IndexCluster index2{ this->root_dir_index_->get_cluster(i) };
+			index2.read_from_partition(this->partition_);
+			for (size_t j = 0; j < IndexCluster::clusters_count; j++)
+			{
+				if (index2.get_cluster(j) != 0)
+				{
+					DirDataCluster* dir_data_cluster = this->cluster_allocator_->get_dir_data_cluster(index2.get_cluster(j));
+					for (size_t k = 0; k < DirDataCluster::dir_entries_count; k++)
+					{
+						if (std::string{ dir_data_cluster->get_dir_entry(k).name } == filename)
+						{
+							return dir_data_cluster->get_dir_entry(k);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// should never happen
+	return {};
+}
+
 File* KernelFS::open(char* filename, char mode)
 {
 	// TODO: synchronization
@@ -86,8 +116,12 @@ File* KernelFS::open(char* filename, char mode)
 
 	this->opened_files_to_modes_map_[std::string{ KernelFS::to_dir_entry(filename).name }] = mode;
 
+	dir_entry_t dir_entry = this->get_dir_entry(std::string{ KernelFS::to_dir_entry(filename).name });
+	
 	File* file = new File{};
-	// TODO: file opening
+	file->myImpl->set_dir_entry(dir_entry);
+	file->myImpl->set_mode(static_cast<FileOperations>(mode));
+	file->myImpl->set_partition(this->partition_);
 	return file;
 }
 
@@ -124,6 +158,11 @@ char KernelFS::delete_file(char* filename)
 	}
 
 	return 0;
+}
+
+ClusterAllocator* KernelFS::get_cluster_allocator() const
+{
+	return this->cluster_allocator_;
 }
 
 KernelFS* KernelFS::get_instance()
