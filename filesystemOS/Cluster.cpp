@@ -1,5 +1,7 @@
 #include "Cluster.h"
 
+#include <cstring>
+
 Cluster::Cluster(cluster_number_t cluster_number)
 	: cluster_number_{cluster_number}
 {
@@ -9,6 +11,11 @@ Cluster::Cluster(cluster_number_t cluster_number)
 void Cluster::set_cluster_number(cluster_number_t cluster_number)
 {
 	this->cluster_number_ = cluster_number;
+}
+
+cluster_number_t Cluster::get_cluster_number() const
+{
+	return this->cluster_number_;
 }
 
 void Cluster::read_from_partition(Partition* partition)
@@ -33,4 +40,10 @@ void Cluster::set_char_in_buffer(size_t index, char ch)
 char Cluster::get_char_from_buffer(size_t index) const
 {
 	return this->buffer_[index];
+}
+
+void Cluster::format()
+{
+	this->dirty_ = true;
+	std::memset(this->buffer_, 0, sizeof this->buffer_);
 }

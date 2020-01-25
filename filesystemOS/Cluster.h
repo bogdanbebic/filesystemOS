@@ -10,11 +10,15 @@ public:
 	explicit Cluster(cluster_number_t cluster_number);
 
 	void set_cluster_number(cluster_number_t cluster_number);
+	cluster_number_t get_cluster_number() const;
+
 	void read_from_partition(Partition* partition);
 	void write_to_partition(Partition* partition);
 
 	void set_char_in_buffer(size_t index, char ch);
 	char get_char_from_buffer(size_t index) const;
+
+	void format();
 protected:
 	// left for use by subclasses, serves only as a structure
 
