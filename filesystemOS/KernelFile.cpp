@@ -54,7 +54,8 @@ bytes_cnt_t KernelFile::read(bytes_cnt_t bytes_cnt, char* buffer)
 
 	while (i < bytes_cnt && !this->eof())
 	{
-		buffer[i] = this->get_current_data_cluster()->get_char_from_buffer(this->get_offset_in_data_cluster());
+		Cluster* current_data_cluster = this->get_current_data_cluster();
+		buffer[i] = current_data_cluster->get_char_from_buffer(this->get_offset_in_data_cluster());
 		i++;
 		this->current_position_++;
 	}
@@ -82,7 +83,7 @@ bytes_cnt_t KernelFile::get_current_position() const
  */
 char KernelFile::eof() const
 {
-	return this->current_position_ == this->size_ ? 2 : 0;
+	return this->current_position_ == this->size_ - 1 ? 2 : 0;
 }
 
 bytes_cnt_t KernelFile::get_file_size() const
@@ -219,7 +220,7 @@ void KernelFile::cache_index_clusters()
 				{
 					IndexCluster* index2 = new IndexCluster{ cluster_number_index2 };
 					index2->read_from_partition(this->partition_);
-					this->file_index2_[cluster_number_index2] = index2;					
+					this->file_index2_[cluster_number_index2] = index2;
 				}
 			}
 		}
