@@ -35,20 +35,25 @@ void FreeClustersRecord::allocate_cluster(cluster_number_t cluster_number) const
 {
 	const size_t index_of_bit_clusters = cluster_number / (ClusterSize * CHAR_BIT);
 	const size_t index_of_bit_in_cluster = cluster_number % (ClusterSize * CHAR_BIT);
-	this->bit_vector_clusters_[index_of_bit_clusters].set_bit(index_of_bit_in_cluster, true);
+	this->bit_vector_clusters_[index_of_bit_clusters].set_bit(index_of_bit_in_cluster, false);
 }
 
 void FreeClustersRecord::deallocate_cluster(cluster_number_t cluster_number) const
 {
 	const size_t index_of_bit_clusters = cluster_number / (ClusterSize * CHAR_BIT);
 	const size_t index_of_bit_in_cluster = cluster_number % (ClusterSize * CHAR_BIT);
-	this->bit_vector_clusters_[index_of_bit_clusters].set_bit(index_of_bit_in_cluster, false);
+	this->bit_vector_clusters_[index_of_bit_clusters].set_bit(index_of_bit_in_cluster, true);
 }
 
 void FreeClustersRecord::format() const
 {
 	for (size_t i = 0; i < this->number_of_clusters_; i++)
 		this->bit_vector_clusters_[i].format();
+
+	for (size_t i = 0; i < this->number_of_clusters_; i++)
+		this->allocate_cluster(i);
+
+	this->allocate_cluster(this->number_of_clusters_);
 }
 
 FreeClustersRecord::~FreeClustersRecord()

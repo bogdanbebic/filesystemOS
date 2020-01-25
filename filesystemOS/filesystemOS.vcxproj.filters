@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Cluster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,6 +43,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KernelFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nit1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nit2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,6 +95,9 @@
     <ClInclude Include="KernelFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="testprimer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\disk1.dat">
@@ -116,5 +128,22 @@
     <Text Include="uputstvo_za_rad_sa_particijom.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="test_fajlovi\Napomena.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="test_fajlovi\ulaz.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="test_fajlovi\Ulaz 0.5MB.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="test_fajlovi\Ulaz 2MB.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="test_fajlovi\ulaz 80KB.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

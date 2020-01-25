@@ -136,6 +136,9 @@
     <ClCompile Include="KernelFile.cpp" />
     <ClCompile Include="KernelFS.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="nit1.cpp" />
+    <ClCompile Include="nit2.cpp" />
+    <ClCompile Include="test_main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitVectorCluster.h" />
@@ -150,6 +153,7 @@
     <ClInclude Include="KernelFile.h" />
     <ClInclude Include="KernelFS.h" />
     <ClInclude Include="part.h" />
+    <ClInclude Include="testprimer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\disk1.dat" />
@@ -163,7 +167,14 @@
     <Library Include="particija.lib" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="test_fajlovi\Napomena.txt" />
+    <Text Include="test_fajlovi\ulaz.txt" />
     <Text Include="uputstvo_za_rad_sa_particijom.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="test_fajlovi\Ulaz 0.5MB.jpg" />
+    <Image Include="test_fajlovi\Ulaz 2MB.jpg" />
+    <Image Include="test_fajlovi\ulaz 80KB.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
