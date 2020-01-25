@@ -1,30 +1,55 @@
-#include <iostream>
+#include"testprimer.h"
 
-#include "part.h"
-
-#include "FS.h"
+using namespace std;
 
 
-int main()
-{
-	Partition partition{ (char*)"resources/p2.ini" };
-	std::cout << "Hello, World!\n";
-	FS::mount(&partition);
+HANDLE nit1,nit2;
+DWORD ThreadID;
 
-	// FS::format();
-	std::cout << "File cnt: " << FS::readRootDir() << std::endl;
-	std::cout << "Does exist: " << (bool)FS::doesExist((char*)"/fajl2.txt") << std::endl;
-	std::cout << "Does exist: " << (bool)FS::doesExist((char*)"/fajl4.txt") << std::endl;
+HANDLE semMain=CreateSemaphore(NULL,0,32,NULL);
+HANDLE sem12=CreateSemaphore(NULL,0,32,NULL);
+HANDLE sem21=CreateSemaphore(NULL,0,32,NULL);
+HANDLE mutex=CreateSemaphore(NULL,1,32,NULL);
 
-	FS::deleteFile((char*)"/fajl2.txt");
-	std::cout << "Deleted /fajl2.txt\n";
-	std::cout << "Does exist: " << (bool)FS::doesExist((char*)"/fajl2.txt") << std::endl;
-	FS::open((char*)"/file1.txt", 'w');
-	FS::open((char*)"/file2.txt", 'w');
-	FS::open((char*)"/file3.txt", 'w');
+Partition *partition;
 
-	std::cout << "Does exist: " << (bool)FS::doesExist((char*)"/file3.txt") << std::endl;
-	
-	FS::unmount();
+char *ulazBuffer;
+int ulazSize;
+
+#ifndef MY_TEST
+
+int main(){
+	clock_t startTime,endTime;
+	cout<<"Pocetak testa!"<<endl;
+	startTime=clock();//pocni merenje vremena
+
+	{//ucitavamo ulazni fajl u bafer, da bi nit 1 i 2 mogle paralelno da citaju
+		FILE *f=fopen("ulaz.dat","rb");
+		if(f==0){
+			cout<<"GRESKA: Nije nadjen ulazni fajl 'ulaz.dat' u os domacinu!"<<endl;
+			system("PAUSE");
+			return 0;//exit program
+		}
+		ulazBuffer=new char[32*1024*1024];//32MB
+		ulazSize=fread(ulazBuffer, 1, 32*1024*1024, f);
+		fclose(f);
+	}
+
+	nit1=CreateThread(NULL, 0,(LPTHREAD_START_ROUTINE) nit1run,NULL,0,&ThreadID); //kreira i startuje niti
+	nit2=CreateThread(NULL, 0,(LPTHREAD_START_ROUTINE) nit2run,NULL,0,&ThreadID);
+
+	for(int i=0; i<2; i++) wait(semMain);//cekamo da se niti zavrse
+	delete [] ulazBuffer;
+	endTime=clock();
+	cout<<"Kraj test primera!"<<endl;
+	cout<<"Vreme izvrsavanja: "<<((double)(endTime-startTime)/((double)CLOCKS_PER_SEC/1000.0))<<"ms!"<<endl;
+	CloseHandle(mutex);
+	CloseHandle(semMain);
+	CloseHandle(sem12);
+	CloseHandle(sem21);
+	CloseHandle(nit1);
+	CloseHandle(nit2);
 	return 0;
 }
+
+#endif
