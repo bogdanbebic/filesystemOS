@@ -12,6 +12,7 @@ public:
 	dir_entry_t get_dir_entry(size_t index) const;
 
 	size_t get_free_entry() const;
+	void format();
 
 	static const size_t dir_entries_count = ClusterSize / sizeof(dir_entry_t);
 private:
