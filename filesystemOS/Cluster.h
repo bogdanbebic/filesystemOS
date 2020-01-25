@@ -1,7 +1,6 @@
 #pragma once
 
 #include "part.h"
-#include <list>
 
 using cluster_number_t = ClusterNo;
 
@@ -9,7 +8,7 @@ class Cluster
 {
 public:
 	explicit Cluster(cluster_number_t cluster_number);
-	~Cluster();
+
 	void set_cluster_number(cluster_number_t cluster_number);
 	void read_from_partition(Partition* partition);
 	void write_to_partition(Partition* partition);

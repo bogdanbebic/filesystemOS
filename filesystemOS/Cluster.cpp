@@ -3,12 +3,7 @@
 Cluster::Cluster(cluster_number_t cluster_number)
 	: cluster_number_{cluster_number}
 {
-	// add_to_cache(this);
-}
-
-Cluster::~Cluster()
-{
-	// remove_from_cache(this);
+	// empty body
 }
 
 void Cluster::set_cluster_number(cluster_number_t cluster_number)
