@@ -1,5 +1,7 @@
 #include "DirDataCluster.h"
 
+#include <cstring>
+
 DirDataCluster::DirDataCluster(cluster_number_t cluster_number)
 	: Cluster(cluster_number)
 {
@@ -29,6 +31,5 @@ size_t DirDataCluster::get_free_entry() const
 void DirDataCluster::format()
 {
 	this->dirty_ = true;
-	for (size_t i = 0; i < DirDataCluster::dir_entries_count; i++)
-		this->dir_entries_[i] = dir_entry_t{};
+	std::memset(this->buffer_, 0, sizeof this->buffer_);
 }

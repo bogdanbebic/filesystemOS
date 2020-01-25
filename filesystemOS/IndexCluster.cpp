@@ -1,5 +1,7 @@
 #include "IndexCluster.h"
 
+#include <cstring>
+
 IndexCluster::IndexCluster(cluster_number_t cluster_number)
 	: Cluster(cluster_number)
 {
@@ -20,6 +22,5 @@ uint32_t IndexCluster::get_cluster(size_t index) const
 void IndexCluster::format()
 {
 	this->dirty_ = true;
-	for (size_t i = 0; i < ClusterSize; i++)
-		this->buffer_[i] = 0;
+	std::memset(this->buffer_, 0, sizeof this->buffer_);
 }

@@ -2,6 +2,8 @@
 
 // CHAR_BIT
 #include <climits>
+// std::memset
+#include <cstring>
 
 BitVectorCluster::BitVectorCluster(cluster_number_t cluster_number)
 	: Cluster(cluster_number)
@@ -42,6 +44,5 @@ bool BitVectorCluster::get_bit(size_t index) const
 void BitVectorCluster::format()
 {
 	this->dirty_ = true;
-	for (size_t i = 0; i < ClusterSize; i++)
-		this->buffer_[i] = (char)-1;
+	std::memset(this->buffer_, -1, sizeof this->buffer_);
 }
