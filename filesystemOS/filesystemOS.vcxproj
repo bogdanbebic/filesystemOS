@@ -129,9 +129,11 @@
     <ClCompile Include="Cluster.cpp" />
     <ClCompile Include="ClusterAllocator.cpp" />
     <ClCompile Include="DirDataCluster.cpp" />
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="FreeClustersRecord.cpp" />
     <ClCompile Include="FS.cpp" />
     <ClCompile Include="IndexCluster.cpp" />
+    <ClCompile Include="KernelFile.cpp" />
     <ClCompile Include="KernelFS.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -141,9 +143,11 @@
     <ClInclude Include="ClusterAllocator.h" />
     <ClInclude Include="DirDataCluster.h" />
     <ClInclude Include="DirEntry.h" />
+    <ClInclude Include="File.h" />
     <ClInclude Include="FreeClustersRecord.h" />
     <ClInclude Include="FS.h" />
     <ClInclude Include="IndexCluster.h" />
+    <ClInclude Include="KernelFile.h" />
     <ClInclude Include="KernelFS.h" />
     <ClInclude Include="part.h" />
   </ItemGroup>
