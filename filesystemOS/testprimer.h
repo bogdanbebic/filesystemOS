@@ -1,6 +1,6 @@
 #pragma once
 
-#define MY_TEST
+// #define MY_TEST
 
 #define _CRT_SECURE_NO_WARNINGS
 

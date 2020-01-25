@@ -167,6 +167,7 @@ void KernelFS::create_file_on_partition(dir_entry_t dir_entry) const
 {
 	for (size_t i = 0; i < IndexCluster::clusters_count; i++)
 	{
+		bool is_allocated_index2 = false;
 		if (this->root_dir_index_->get_cluster(i) == 0)
 		{
 			cluster_number_t next_free_cluster = this->free_clusters_record_->get_next_free_cluster_number();
@@ -174,10 +175,15 @@ void KernelFS::create_file_on_partition(dir_entry_t dir_entry) const
 			this->free_clusters_record_->write_to_partition(this->partition_);
 			this->root_dir_index_->set_cluster(i, next_free_cluster);
 			this->root_dir_index_->write_to_partition(this->partition_);
+			is_allocated_index2 = true;
 		}
 
 		IndexCluster index2{ this->root_dir_index_->get_cluster(i) };
-		index2.read_from_partition(this->partition_);
+		if (is_allocated_index2)
+			index2.format();
+		else
+			index2.read_from_partition(this->partition_);
+		
 		for (size_t j = 0; j < IndexCluster::clusters_count; j++)
 		{
 			if (index2.get_cluster(j) == 0)
@@ -187,6 +193,9 @@ void KernelFS::create_file_on_partition(dir_entry_t dir_entry) const
 				this->free_clusters_record_->write_to_partition(this->partition_);
 				index2.set_cluster(j, next_free_cluster);
 				index2.write_to_partition(this->partition_);
+				IndexCluster temp{ index2.get_cluster(j) };
+				temp.format();
+				temp.write_to_partition(this->partition_);
 			}
 
 			DirDataCluster* dir_data_cluster = this->cluster_allocator_->get_dir_data_cluster(index2.get_cluster(j));

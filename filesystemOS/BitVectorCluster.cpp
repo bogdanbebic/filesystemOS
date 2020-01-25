@@ -11,6 +11,7 @@ BitVectorCluster::BitVectorCluster(cluster_number_t cluster_number)
 
 void BitVectorCluster::set_bit(size_t index, bool value)
 {
+	this->dirty_ = true;
 	if (value)
 		this->set_bit(index);
 	else
