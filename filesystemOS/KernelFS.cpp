@@ -3,7 +3,7 @@
 #include "File.h"
 #include "KernelFile.h"
 
-KernelFS::KernelFS()  // NOLINT(cppcoreguidelines-pro-type-member-init)
+KernelFS::KernelFS()  // NOLINT(cppcoreguidelines-pro-type-member-init, hicpp-member-init)
 {
 	InitializeCriticalSection(&this->mount_critical_section_);
 	InitializeConditionVariable(&this->mount_cv_);
@@ -176,9 +176,13 @@ File* KernelFS::open(char* filename, char mode)
 
 char KernelFS::delete_file(char* filename)
 {
-	// TODO: check open files
 	if (this->exists(filename))
 	{
+		EnterCriticalSection(&this->delete_critical_section_);
+		while (this->opened_files_to_modes_map_.find(std::string{ KernelFS::to_dir_entry(filename).name })
+			!= this->opened_files_to_modes_map_.end())
+			SleepConditionVariableCS(&this->delete_cv_, &this->delete_critical_section_, INFINITE);
+		
 		this->files_.erase(std::string{ KernelFS::to_dir_entry(filename).name });
 		dir_entry_t dir_entry = KernelFS::to_dir_entry(filename);
 		for (size_t i = 0; i < IndexCluster::clusters_count; i++)
@@ -197,6 +201,7 @@ char KernelFS::delete_file(char* filename)
 							if (KernelFS::is_same_descriptor(dir_entry, dir_data_cluster->get_dir_entry(k)))
 							{
 								dir_data_cluster->set_dir_entry(k, dir_entry_t{});
+								LeaveCriticalSection(&this->delete_critical_section_);
 								return 1;
 							}
 						}
@@ -204,6 +209,8 @@ char KernelFS::delete_file(char* filename)
 				}
 			}
 		}
+
+		LeaveCriticalSection(&this->delete_critical_section_);
 	}
 
 	return 0;
@@ -381,6 +388,7 @@ void KernelFS::close_file(std::string filename, char mode)
 
 	WakeConditionVariable(&this->unmount_cv_);
 	WakeConditionVariable(&this->format_cv_);
+	WakeConditionVariable(&this->delete_cv_);
 }
 
 /**

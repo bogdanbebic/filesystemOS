@@ -88,6 +88,9 @@ private:
 	CRITICAL_SECTION format_critical_section_;
 	CONDITION_VARIABLE format_cv_;
 	bool is_format = false;
+
+	CRITICAL_SECTION delete_critical_section_;
+	CONDITION_VARIABLE delete_cv_;
 };
 
 // extern KernelFS kernelFS_instance;
