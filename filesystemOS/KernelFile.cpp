@@ -38,7 +38,8 @@ char KernelFile::write(bytes_cnt_t bytes_cnt, char* buffer)
 	bytes_cnt_t i = 0;
 	while (i < bytes_cnt && !this->eof())
 	{
-		this->get_current_data_cluster()->set_char_in_buffer(this->get_offset_in_data_cluster(), buffer[i]);
+		Cluster* cluster = this->get_current_data_cluster();
+		cluster->set_char_in_buffer(this->get_offset_in_data_cluster(), buffer[i]);
 		i++;
 		this->current_position_++;
 	}
@@ -129,7 +130,7 @@ size_t KernelFile::get_offset_in_data_cluster() const
 cluster_number_t KernelFile::get_current_data_cluster_number()
 {
 	const cluster_number_t index2 = this->file_index_->get_cluster(this->current_position_ / ClusterSize / IndexCluster::clusters_count);
-	const cluster_number_t data_cluster = this->file_index2_[index2]->get_cluster(this->current_position_ / ClusterSize);
+	const cluster_number_t data_cluster = this->file_index2_[index2]->get_cluster(this->current_position_ / ClusterSize % IndexCluster::clusters_count);
 	return data_cluster;
 }
 
