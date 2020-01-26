@@ -24,6 +24,7 @@ KernelFile::~KernelFile()
 	}
 
 	this->file_index2_.clear();
+	KernelFS::get_instance()->close_file(std::string{ this->dir_entry_.name });
 }
 
 char KernelFile::write(bytes_cnt_t bytes_cnt, char* buffer)

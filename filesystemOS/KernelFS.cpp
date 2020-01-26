@@ -114,6 +114,7 @@ File* KernelFS::open(char* filename, char mode)
 	if (!this->exists(filename))
 		return nullptr;
 
+	// TODO: wait readers/writers
 	this->opened_files_to_modes_map_[std::string{ KernelFS::to_dir_entry(filename).name }] = mode;
 
 	dir_entry_t dir_entry = this->get_dir_entry(std::string{ KernelFS::to_dir_entry(filename).name });
@@ -286,6 +287,12 @@ dir_entry_t KernelFS::to_dir_entry(char* filepath)
 		dir_entry.extension[j - i] = filepath[j + 2];
 	
 	return dir_entry;
+}
+
+void KernelFS::close_file(std::string filename)
+{
+	this->opened_files_to_modes_map_.erase(filename);
+	// TODO: notify readers/writers
 }
 
 /**

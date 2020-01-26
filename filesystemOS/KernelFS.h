@@ -41,6 +41,7 @@ public:
 
 	static KernelFS* get_instance();
 	static dir_entry_t to_dir_entry(char* filepath);
+	void close_file(std::string filename);
 protected:
 	static KernelFS kernel_fs_instance_;
 private:
