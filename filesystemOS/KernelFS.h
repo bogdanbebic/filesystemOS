@@ -91,6 +91,9 @@ private:
 
 	CRITICAL_SECTION delete_critical_section_;
 	CONDITION_VARIABLE delete_cv_;
+
+	CRITICAL_SECTION file_critical_section_;
+	CONDITION_VARIABLE file_cv_;
 };
 
 // extern KernelFS kernelFS_instance;

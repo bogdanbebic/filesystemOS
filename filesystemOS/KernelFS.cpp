@@ -17,6 +17,9 @@ KernelFS::KernelFS()  // NOLINT(cppcoreguidelines-pro-type-member-init, hicpp-me
 
 	InitializeCriticalSection(&this->delete_critical_section_);
 	InitializeConditionVariable(&this->delete_cv_);
+
+	InitializeCriticalSection(&this->file_critical_section_);
+	InitializeConditionVariable(&this->file_cv_);
 }
 
 char KernelFS::mount(Partition* partition)
@@ -149,6 +152,12 @@ File* KernelFS::open(char* filename, char mode)
 	// this->wait(std::string{ KernelFS::to_dir_entry(filename).name }, mode);
 
 	this->readers_writers_.acquire(std::string{ KernelFS::to_dir_entry(filename).name }, mode == 'r');
+
+	EnterCriticalSection(&this->file_critical_section_);
+	
+	while (this->opened_files_to_modes_map_.find(std::string{ KernelFS::to_dir_entry(filename).name })
+		!= this->opened_files_to_modes_map_.end())
+		SleepConditionVariableCS(&this->file_cv_, &this->file_critical_section_, INFINITE);
 	
 	if (mode == FileOperations::WRITE)
 	{
@@ -162,6 +171,7 @@ File* KernelFS::open(char* filename, char mode)
 	if (!this->exists(filename))
 	{
 		this->readers_writers_.release(std::string{ KernelFS::to_dir_entry(filename).name }, mode == 'r');
+		LeaveCriticalSection(&this->file_critical_section_);
 		return nullptr;
 	}
 
@@ -174,6 +184,9 @@ File* KernelFS::open(char* filename, char mode)
 	file->myImpl->set_dir_entry(dir_entry);
 	file->myImpl->set_mode(mode);
 	file->myImpl->cache_index_clusters();
+
+	LeaveCriticalSection(&this->file_critical_section_);
+	
 	return file;
 }
 
@@ -392,6 +405,7 @@ void KernelFS::close_file(std::string filename, char mode)
 	WakeConditionVariable(&this->unmount_cv_);
 	WakeConditionVariable(&this->format_cv_);
 	WakeConditionVariable(&this->delete_cv_);
+	WakeAllConditionVariable(&this->file_cv_);
 }
 
 /**
