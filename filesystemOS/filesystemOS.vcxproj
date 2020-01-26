@@ -138,6 +138,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="nit1.cpp" />
     <ClCompile Include="nit2.cpp" />
+    <ClCompile Include="ReadersWriters.cpp" />
     <ClCompile Include="test_main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="KernelFile.h" />
     <ClInclude Include="KernelFS.h" />
     <ClInclude Include="part.h" />
+    <ClInclude Include="ReadersWriters.h" />
     <ClInclude Include="testprimer.h" />
   </ItemGroup>
   <ItemGroup>

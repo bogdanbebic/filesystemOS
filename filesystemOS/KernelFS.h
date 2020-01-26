@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Windows.h>
+
 #include "part.h"
 #include "FS.h"
 
@@ -10,6 +12,7 @@
 #include "FreeClustersRecord.h"
 #include "DirEntry.h"
 #include "ClusterAllocator.h"
+#include "ReadersWriters.h"
 
 using file_cnt_t = FileCnt;
 using cluster_cnt_t = ClusterNo;
@@ -38,7 +41,7 @@ public:
 
 	static KernelFS* get_instance();
 	static dir_entry_t to_dir_entry(char* filepath);
-	void close_file(std::string filename);
+	void close_file(std::string filename, char mode);
 protected:
 	static KernelFS kernel_fs_instance_;
 private:
@@ -50,6 +53,9 @@ private:
 	void create_file_on_partition(dir_entry_t dir_entry) const;
 
 	static bool is_same_descriptor(dir_entry_t dir_entry1, dir_entry_t dir_entry2);
+
+	void wait(std::string filename, char mode);
+	void signal(std::string filename);
 	
 	Partition* partition_ = nullptr;
 
@@ -63,6 +69,11 @@ private:
 
 	std::unordered_set<std::string> files_;
 	std::map<std::string, char> opened_files_to_modes_map_;
+	std::map<std::string, size_t> opened_files_to_cnt_map_;
+	std::map<std::string, HANDLE> open_files_readers_writers_;
+
+	ReadersWriters readers_writers_;
+	
 };
 
 // extern KernelFS kernelFS_instance;

@@ -101,7 +101,10 @@ dir_entry_t KernelFS::get_dir_entry(std::string filename)
 
 File* KernelFS::open(char* filename, char mode)
 {
-	// TODO: synchronization
+	// this->wait(std::string{ KernelFS::to_dir_entry(filename).name }, mode);
+
+	this->readers_writers_.acquire(std::string{ KernelFS::to_dir_entry(filename).name }, mode == 'r');
+	
 	if (mode == FileOperations::WRITE)
 	{
 		if (this->exists(filename))
@@ -112,9 +115,11 @@ File* KernelFS::open(char* filename, char mode)
 	}
 
 	if (!this->exists(filename))
+	{
+		this->readers_writers_.release(std::string{ KernelFS::to_dir_entry(filename).name }, mode == 'r');
 		return nullptr;
+	}
 
-	// TODO: wait readers/writers
 	this->opened_files_to_modes_map_[std::string{ KernelFS::to_dir_entry(filename).name }] = mode;
 
 	dir_entry_t dir_entry = this->get_dir_entry(std::string{ KernelFS::to_dir_entry(filename).name });
@@ -259,6 +264,43 @@ bool KernelFS::is_same_descriptor(dir_entry_t dir_entry1, dir_entry_t dir_entry2
 	return std::string{ dir_entry1.name } == std::string{ dir_entry2.name };
 }
 
+void KernelFS::wait(std::string filename, char mode)
+{
+	if (this->open_files_readers_writers_.find(filename) != this->open_files_readers_writers_.end())
+	{
+		/*
+		if (this->opened_files_to_modes_map_[filename] == 'r' && mode == 'r')
+		{
+			this->opened_files_to_cnt_map_[filename] += 1;
+			return;
+		}
+		*/
+		HANDLE sem = this->open_files_readers_writers_[filename];
+		WaitForSingleObject(sem, INFINITE);
+	}
+	else
+	{
+		HANDLE sem = CreateSemaphore(NULL, 0, 32, NULL);
+		this->open_files_readers_writers_[filename] = sem;
+		//this->opened_files_to_cnt_map_[filename] = 1;
+	}
+}
+
+void KernelFS::signal(std::string filename)
+{
+	if (this->open_files_readers_writers_.find(filename) != this->open_files_readers_writers_.end())
+	{
+		HANDLE sem = this->open_files_readers_writers_[filename];
+		//this->opened_files_to_cnt_map_[filename]--;
+		//if (this->opened_files_to_cnt_map_[filename] == 0)
+		//{
+			this->open_files_readers_writers_.erase(filename);
+			//this->opened_files_to_cnt_map_.erase(filename);
+			ReleaseSemaphore(sem, 1, NULL);
+		//}
+	}
+}
+
 FreeClustersRecord* KernelFS::get_free_clusters_record() const
 {
 	return this->free_clusters_record_;
@@ -289,10 +331,11 @@ dir_entry_t KernelFS::to_dir_entry(char* filepath)
 	return dir_entry;
 }
 
-void KernelFS::close_file(std::string filename)
+void KernelFS::close_file(std::string filename, char mode)
 {
 	this->opened_files_to_modes_map_.erase(filename);
-	// TODO: notify readers/writers
+	// this->signal(filename);
+	this->readers_writers_.release(filename, mode == 'r');
 }
 
 /**
