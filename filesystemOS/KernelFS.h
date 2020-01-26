@@ -22,6 +22,8 @@ class KernelFS
 public:
 	enum FileOperations { WRITE = 'w', READ = 'r', APPEND = 'a' };
 
+	KernelFS();
+
 	char mount(Partition* partition);
 	
 	char unmount();
@@ -73,7 +75,19 @@ private:
 	std::map<std::string, HANDLE> open_files_readers_writers_;
 
 	ReadersWriters readers_writers_;
+
+
+	// synchronization
 	
+	CRITICAL_SECTION mount_critical_section_;
+	CONDITION_VARIABLE mount_cv_;
+
+	CRITICAL_SECTION unmount_critical_section_;
+	CONDITION_VARIABLE unmount_cv_;
+
+	CRITICAL_SECTION format_critical_section_;
+	CONDITION_VARIABLE format_cv_;
+	bool is_format = false;
 };
 
 // extern KernelFS kernelFS_instance;

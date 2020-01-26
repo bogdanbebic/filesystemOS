@@ -3,9 +3,28 @@
 #include "File.h"
 #include "KernelFile.h"
 
+KernelFS::KernelFS()  // NOLINT(cppcoreguidelines-pro-type-member-init)
+{
+	InitializeCriticalSection(&this->mount_critical_section_);
+	InitializeConditionVariable(&this->mount_cv_);
+
+	InitializeCriticalSection(&this->unmount_critical_section_);
+	InitializeConditionVariable(&this->unmount_cv_);
+
+	InitializeCriticalSection(&this->format_critical_section_);
+	InitializeConditionVariable(&this->format_cv_);
+
+}
+
 char KernelFS::mount(Partition* partition)
 {
 	if (partition == nullptr) return 0;
+
+	this->is_format = true;
+	EnterCriticalSection(&this->mount_critical_section_);
+	
+	while (this->partition_ != nullptr)
+		SleepConditionVariableCS(&this->mount_cv_, &this->mount_critical_section_, INFINITE);
 	
 	this->partition_ = partition;
 	
@@ -21,6 +40,10 @@ char KernelFS::mount(Partition* partition)
 	
 	this->cache_files_to_container();
 
+	this->is_format = false;
+	
+	LeaveCriticalSection(&this->mount_critical_section_);
+	
 	return 1;
 }
 
@@ -28,6 +51,11 @@ char KernelFS::unmount()
 {
 	if (this->partition_ == nullptr) return 0;
 
+	EnterCriticalSection(&this->unmount_critical_section_);
+	
+	while (!this->opened_files_to_modes_map_.empty())
+		SleepConditionVariableCS(&this->unmount_cv_, &this->unmount_critical_section_, INFINITE);
+	
 	delete this->cluster_allocator_;
 	this->cluster_allocator_ = nullptr;
 	
@@ -42,6 +70,10 @@ char KernelFS::unmount()
 	this->partition_ = nullptr;
 
 	this->clear_cache();
+
+	LeaveCriticalSection(&this->unmount_critical_section_);
+	
+	WakeConditionVariable(&this->mount_cv_);
 	
 	return 1;
 }
@@ -49,10 +81,18 @@ char KernelFS::unmount()
 char KernelFS::format()
 {
 	if (this->partition_ == nullptr) return 0;
+
+	EnterCriticalSection(&this->format_critical_section_);
+
+	while (!this->opened_files_to_modes_map_.empty())
+		SleepConditionVariableCS(&this->format_cv_, &this->format_critical_section_, INFINITE);
 	
 	this->free_clusters_record_->format();
 	this->root_dir_index_->format();
 	this->clear_cache();
+
+	LeaveCriticalSection(&this->format_critical_section_);
+	
 	return 1;
 }
 
@@ -101,6 +141,8 @@ dir_entry_t KernelFS::get_dir_entry(std::string filename)
 
 File* KernelFS::open(char* filename, char mode)
 {
+	if (this->is_format)
+		return nullptr;
 	// this->wait(std::string{ KernelFS::to_dir_entry(filename).name }, mode);
 
 	this->readers_writers_.acquire(std::string{ KernelFS::to_dir_entry(filename).name }, mode == 'r');
@@ -336,6 +378,9 @@ void KernelFS::close_file(std::string filename, char mode)
 	this->opened_files_to_modes_map_.erase(filename);
 	// this->signal(filename);
 	this->readers_writers_.release(filename, mode == 'r');
+
+	WakeConditionVariable(&this->unmount_cv_);
+	WakeConditionVariable(&this->format_cv_);
 }
 
 /**
