@@ -192,12 +192,12 @@ void KernelFile::extend(size_t size_increment)
 			size_t free_entry = index2->get_free_entry();
 			if (free_entry != IndexCluster::clusters_count)
 			{
-				cluster_number_t next_free_cluster = KernelFS::get_instance()->get_free_clusters_record()->get_next_free_cluster_number();
-				KernelFS::get_instance()->get_free_clusters_record()->allocate_cluster(next_free_cluster);
+				cluster_number_t next_free_cluster_data = KernelFS::get_instance()->get_free_clusters_record()->get_next_free_cluster_number();
+				KernelFS::get_instance()->get_free_clusters_record()->allocate_cluster(next_free_cluster_data);
 
-				Cluster* data_cluster = KernelFS::get_instance()->get_cluster_allocator()->get_data_cluster(next_free_cluster);
+				Cluster* data_cluster = KernelFS::get_instance()->get_cluster_allocator()->get_data_cluster(next_free_cluster_data);
 				data_cluster->format();
-				index2->set_cluster(free_entry, next_free_cluster);
+				index2->set_cluster(free_entry, next_free_cluster_data);
 				index2->write_to_partition(this->partition_);
 			}
 		}
