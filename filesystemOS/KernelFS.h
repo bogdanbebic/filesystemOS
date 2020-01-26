@@ -18,9 +18,6 @@ class KernelFS
 {
 public:
 	enum FileOperations { WRITE = 'w', READ = 'r', APPEND = 'a' };
-	// TODO: delete ctor and dtor
-	KernelFS() { std::cout << "KernelFS ctor\n"; }
-	~KernelFS() { std::cout << "KernelFS dtor\n"; }
 
 	char mount(Partition* partition);
 	
