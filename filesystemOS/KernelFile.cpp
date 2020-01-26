@@ -95,7 +95,35 @@ bytes_cnt_t KernelFile::get_file_size() const
 
 char KernelFile::truncate()
 {
-	// TODO: implement
+	cluster_number_t current_cluster_number = this->get_current_data_cluster_number();
+	bool found = false;
+	for (auto& elem : this->file_index2_)
+	{
+		for (size_t i = 0; i < IndexCluster::clusters_count; i++)
+		{
+			if (found)
+			{
+				KernelFS::get_instance()->get_cluster_allocator()->get_data_cluster(elem.second->get_cluster(i))->format();
+				elem.second->set_cluster(i, 0);
+			}
+
+			if (current_cluster_number == elem.second->get_cluster(i))
+				found = true;
+		}
+	}
+
+	for (size_t i = 0; i < IndexCluster::clusters_count; i++)
+		if (this->file_index2_[this->file_index_->get_cluster(i)]->get_free_entry() == 0)
+			this->file_index_->set_cluster(i, 0);
+
+	Cluster* current_cluster = this->get_current_data_cluster();
+	for (size_t i = this->get_offset_in_data_cluster() + 1; i < ClusterSize; i++)
+		current_cluster->set_char_in_buffer(i, 0);
+
+	current_cluster->write_to_partition(this->partition_);
+
+	this->size_ = this->get_current_position() + 1;
+	
 	return 1;
 }
 
