@@ -101,6 +101,11 @@ void KernelFile::set_dir_entry(dir_entry_t dir_entry)
 {
 	this->dir_entry_ = dir_entry;
 	this->size_ = dir_entry.file_size;
+	if (dir_entry.first_level_index_of_file != 0)
+	{
+		this->file_index_ = new IndexCluster{ dir_entry.first_level_index_of_file };
+		this->file_index_->read_from_partition(this->partition_);
+	}
 }
 
 void KernelFile::set_mode(char mode)
@@ -154,9 +159,9 @@ void KernelFile::extend(size_t size_increment)
 		bool is_cluster_allocated = false;
 		while (this->file_index_->get_cluster(i) != 0)
 		{
-			IndexCluster index2{ this->file_index_->get_cluster(i) };
-			index2.read_from_partition(this->partition_);
-			size_t free_entry = index2.get_free_entry();
+			IndexCluster* index2 = this->file_index2_[this->file_index_->get_cluster(i)];
+			index2->read_from_partition(this->partition_);
+			size_t free_entry = index2->get_free_entry();
 			if (free_entry != IndexCluster::clusters_count)
 			{
 				cluster_number_t next_free_cluster = KernelFS::get_instance()->get_free_clusters_record()->get_next_free_cluster_number();
@@ -164,8 +169,8 @@ void KernelFile::extend(size_t size_increment)
 
 				Cluster* data_cluster = KernelFS::get_instance()->get_cluster_allocator()->get_data_cluster(next_free_cluster);
 				data_cluster->format();
-				index2.set_cluster(free_entry, next_free_cluster);
-				index2.write_to_partition(this->partition_);
+				index2->set_cluster(free_entry, next_free_cluster);
+				index2->write_to_partition(this->partition_);
 				is_cluster_allocated = true;
 				break;
 			}

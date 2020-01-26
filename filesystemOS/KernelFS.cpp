@@ -119,9 +119,9 @@ File* KernelFS::open(char* filename, char mode)
 	dir_entry_t dir_entry = this->get_dir_entry(std::string{ KernelFS::to_dir_entry(filename).name });
 	
 	File* file = new File{};
-	file->myImpl->set_dir_entry(dir_entry);
-	file->myImpl->set_mode(static_cast<FileOperations>(mode));
 	file->myImpl->set_partition(this->partition_);
+	file->myImpl->set_dir_entry(dir_entry);
+	file->myImpl->set_mode(mode);
 	file->myImpl->cache_index_clusters();
 	return file;
 }
