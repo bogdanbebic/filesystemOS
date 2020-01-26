@@ -3,6 +3,7 @@
 #include "File.h"
 #include "KernelFile.h"
 
+// ReSharper disable once CommentTypo
 KernelFS::KernelFS()  // NOLINT(cppcoreguidelines-pro-type-member-init, hicpp-member-init)
 {
 	InitializeCriticalSection(&this->mount_critical_section_);
@@ -14,6 +15,8 @@ KernelFS::KernelFS()  // NOLINT(cppcoreguidelines-pro-type-member-init, hicpp-me
 	InitializeCriticalSection(&this->format_critical_section_);
 	InitializeConditionVariable(&this->format_cv_);
 
+	InitializeCriticalSection(&this->delete_critical_section_);
+	InitializeConditionVariable(&this->delete_cv_);
 }
 
 char KernelFS::mount(Partition* partition)
